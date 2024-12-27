@@ -1,0 +1,71 @@
+﻿@model IEnumerable<dav33.Models.Student>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<h2>Students List</h2>
+
+<!-- Create New Student Link -->
+<p>
+    @Html.ActionLink("Create New Student", "Create", null, new { @class = "btn btn-primary" })
+</p>
+
+<!-- Search and Sorting Form -->
+@using (Html.BeginForm("Index", "Student", FormMethod.Get))
+{
+    <div class="form-inline mb-3">
+        <label for="search">Search:</label>
+        @Html.TextBox("search", null, new { @class = "form-control ml-2", placeholder = "Search by Name or Surname" })
+
+        <label class="ml-4" for="sort">Sort by:</label>
+        @Html.DropDownList("sort", new SelectList(new[] {
+            new { Value = "FirstName", Text = "Name" },
+            new { Value = "BirthDate", Text = "Birth Date" }
+        }, "Value", "Text"), "-- Select Sorting --", new { @class = "form-control ml-2" })
+
+        <button type="submit" class="btn btn-secondary ml-3">Filter</button>
+    </div>
+}
+
+<!-- Students Table -->
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Birth Date</th>
+            <th>Email</th>
+            <th>Phone Number</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Any())
+        {
+            foreach (var student in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => student.FirstName)</td>
+                    <td>@Html.DisplayFor(modelItem => student.LastName)</td>
+                    <td>@student.BirthDate.ToShortDateString()</td>
+                    <td>@Html.DisplayFor(modelItem => student.Email)</td>
+                    <td>@Html.DisplayFor(modelItem => student.PhoneNumber)</td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = student.Id }, new { @class = "btn btn-sm btn-warning" })
+                        @Html.ActionLink("Details", "Details", new { id = student.Id }, new { @class = "btn btn-sm btn-info" })
+                        @Html.ActionLink("Delete", "Delete", new { id = student.Id }, new { @class = "btn btn-sm btn-danger" })
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center">No students found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
